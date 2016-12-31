@@ -23,6 +23,7 @@ $('document').ready(function() {
 });
 
 function updateTime() {
+	
 	var date = new Date($.now());
 	var hours = date.getHours();
 	var moreve = "am";
@@ -33,9 +34,12 @@ function updateTime() {
 	}
 	var minutes = date.getMinutes();
 	var min = minutes;
+	var hr = hours;
 	if(minutes < 10)
 		min = "0" + minutes;
-	var time = hours + ":" + min;
+	if(hours < 10)
+		hr = "0" + hours;
+	var time = hr + ":" + min;
 	var month = months[date.getMonth()];
 	var year = date.getFullYear();
 	var my = month + " " + year;
@@ -52,6 +56,7 @@ function success(position) {
 }
 
 function updateWeather(latitude,longitude){
+	
 	var base_url = "http://api.openweathermap.org/data/2.5/weather?";
 	var latlon = "lat=" + latitude + "&" + "lon=" + longitude;
 	var url = base_url + latlon + openWeatherApikey;
@@ -106,6 +111,7 @@ function previousMonth() {
 
 // Callback for clicking the down arrow
 function nextMonth() {
+    
     month = (month + 1) % 12;
     if (month == 0) {
         year++;
