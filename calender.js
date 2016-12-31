@@ -7,17 +7,39 @@ $('document').ready(function(){
 	// 	console.log("Geolocation not supported");	
 	// else
 	// 	navigator.geolocation.getCurrentPosition(success,error);
+	
 	$(".fa-chevron-up").click(function(){
-		var monthAndYear = $(".MonthAndYear").text();
-		var temp = monthAndYear.split(" ");
-		var month = temp[0];
-		var year = parseInt(temp[1].trim());
+		
+		var monthAndYear = $.trim($(".my").text());
+		var temp = monthAndYear.split(" ");		
+		var month = $.trim(temp[0]);
+		var year = parseInt(temp[1]);
 		var index = months.indexOf(month);
-		console.log(index);
+		if(month == "December"){
+			year = year + 1;
+			month = months[0];
+		}else{
+			month = months[months.indexOf(month) + 1];
+		}
+		var my = month + " " + year;
+		$(".my").text($.trim(my));
 	});
 
 	$(".fa-chevron-down").click(function(){
-		console.log("Down clicked");
+		
+		var monthAndYear = $.trim($(".my").text());
+		var temp = monthAndYear.split(" ");		
+		var month = $.trim(temp[0]);
+		var year = parseInt(temp[1]);
+		var index = months.indexOf(month);
+		if(month == "January"){
+			year = year - 1;
+			month = months[11];
+		}else{
+			month = months[months.indexOf(month) - 1];
+		}
+		var my = month + " " + year;
+		$(".my").text($.trim(my));
 	});
 });
 
