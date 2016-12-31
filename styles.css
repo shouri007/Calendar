@@ -1,13 +1,14 @@
 #sidebar{
+	
 	background-color: #2ed39e;
 	height: 100%;
 	width: 190px;
-	position: absolute;left: 0;top: 0
+	position: fixed;left: 0;top: 0
 }
 
 #Time{
 	padding-left: 15px;
-	position: fixed; top: 70px;
+	position: absolute; top: 70px;
 	font-size: 60px;
 	color: #ffffff
 }
@@ -15,21 +16,21 @@
 #moreve{
 	
 	padding-left: 155px;
-	position: fixed; top: 125px;
+	position: absolute; top: 125px;
 	font-size: 18px;
 	color: #ffffff;
 }
 
 #TodayTitle{
 	padding-left: 25px;
-	position: fixed; top: 210px;
+	position: absolute; top: 210px;
 	color: #ffffff;
 	font-size: 13px;
 }
 
 #TodaySchedule{
 
-	position: fixed; bottom: 200px;
+	position: absolute; bottom: 200px;
 	width: 190px;
 	height: 160px;
 	background-color: #2bc493;
@@ -38,14 +39,14 @@
 
 #WeatherTitle{
 	padding-left: 25px;
-	position: fixed; bottom: 120px;
+	position: absolute; bottom: 120px;
 	color: #ffffff;
 	font-size: 13px;
 }
 
 #weather{	
 	
-	position: fixed; bottom: 50px;
+	position: absolute; bottom: 50px;
 	width: 190px;
 	height: 75px;
 	background-color: #2bc493;
@@ -54,14 +55,14 @@
 
 #maxtemp{
 	padding-left: 80px;
-	position: fixed; bottom: 50px;
+	position: absolute; bottom: 50px;
 	color: #ffffff;
 	font-size: 30px;
 }
 
 #mintemp{
 	padding-left: 120px;
-	position: fixed; bottom: 65px;
+	position: absolute; bottom: 65px;
 	color: #ffffff;
 	font-size: 20px;	
 }
@@ -69,14 +70,14 @@
 #weatherIcon{
 
 	padding-left: 25px;
-	position: fixed; bottom: 80px;
+	position: absolute; bottom: 80px;
 	color: #ffffff;
 }
 
 #weatherType{
 
 	padding-left: 20px;
-	position: fixed; bottom: 45px;
+	position: absolute; bottom: 45px;
 	color: #ffffff;
 	font-size: 15px;
 }
@@ -99,8 +100,81 @@
 
 #MainCalendar{
 	height: 100%;
-	position: fixed;
+	position: absolute;
 	left: 190px;
 	top: 0px;
-	width: 100%;
-}		
+	width: calc(100% - 190px);
+	right: 50px;
+}
+
+#Calendar{
+	padding-left: 20px;
+}
+
+table{
+	width: calc(100% - 10px);
+	top:0px;
+	border-collapse: collapse;
+}
+
+th{
+	height: 20px;
+	font-size: 15px;
+	vertical-align: bottom;
+	color: #b3b3b3;
+	text-align: left;
+}
+
+td{
+	height: 100px;
+	color: #b3b3b3;
+	padding-top: 0px;
+	padding-left: 0px;
+	border-spacing: 0px;
+	border-top-style: solid;
+	border-top-color: #e5e6e7;
+	border-top-width: 2px;
+	vertical-align: top;
+	font-style: 
+}
+
+.col1{
+	width: calc((100%-190px)/7);
+	border-right-style: solid;
+	border-right-color: #e5e6e7;
+	border-right-width: 2px;
+	height: calc(100%5);
+}
+.col2{
+	width: calc((100%-190px)/7);
+	border-right-style: solid;
+	border-right-color: #e5e6e7;
+	border-right-width: 2px;
+}
+.col3{
+	width: calc((100%-190px)/7);
+	border-right-style: solid;
+	border-right-color: #e5e6e7;
+	border-right-width: 2px;
+}
+.col4{
+	width: calc((100%-190px)/7);
+	border-right-style: solid;
+	border-right-color: #e5e6e7;
+	border-right-width: 2px;
+}
+.col5{
+	width: calc((100%-190px)/7);
+	border-right-style: solid;
+	border-right-color: #e5e6e7;
+	border-right-width: 2px;
+}
+.col6{
+	width: calc((100%-190px)/7);
+	border-right-style: solid;
+	border-right-color: #e5e6e7;
+	border-right-width: 2px;
+}
+.col7{
+	border-right-width: 2px;
+}
