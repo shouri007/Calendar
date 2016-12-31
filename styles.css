@@ -1,0 +1,106 @@
+#sidebar{
+	background-color: #2ed39e;
+	height: 100%;
+	width: 190px;
+	position: absolute;left: 0;top: 0
+}
+
+#Time{
+	padding-left: 15px;
+	position: fixed; top: 70px;
+	font-size: 60px;
+	color: #ffffff
+}
+
+#moreve{
+	
+	padding-left: 155px;
+	position: fixed; top: 125px;
+	font-size: 18px;
+	color: #ffffff;
+}
+
+#TodayTitle{
+	padding-left: 25px;
+	position: fixed; top: 210px;
+	color: #ffffff;
+	font-size: 13px;
+}
+
+#TodaySchedule{
+
+	position: fixed; bottom: 200px;
+	width: 190px;
+	height: 160px;
+	background-color: #2bc493;
+	color: #ffffff;
+}
+
+#WeatherTitle{
+	padding-left: 25px;
+	position: fixed; bottom: 120px;
+	color: #ffffff;
+	font-size: 13px;
+}
+
+#weather{	
+	
+	position: fixed; bottom: 50px;
+	width: 190px;
+	height: 75px;
+	background-color: #2bc493;
+	color: #ffffff;
+}	
+
+#maxtemp{
+	padding-left: 80px;
+	position: fixed; bottom: 50px;
+	color: #ffffff;
+	font-size: 30px;
+}
+
+#mintemp{
+	padding-left: 120px;
+	position: fixed; bottom: 65px;
+	color: #ffffff;
+	font-size: 20px;	
+}
+
+#weatherIcon{
+
+	padding-left: 25px;
+	position: fixed; bottom: 80px;
+	color: #ffffff;
+}
+
+#weatherType{
+
+	padding-left: 20px;
+	position: fixed; bottom: 45px;
+	color: #ffffff;
+	font-size: 15px;
+}
+
+#MonthAndYear{	
+	color: #2ed39e;
+	padding-left: 37%;
+	font-size: 16px;
+	border-bottom-width: 1px;
+	border-bottom-color: #e5e6e7;
+	border-bottom-style: solid;
+	padding-bottom: 5px;
+}
+
+#my{
+	color: #2ed39e;
+	padding-top: 0px;
+	padding-left: 4px;
+}
+
+#MainCalendar{
+	height: 100%;
+	position: fixed;
+	left: 190px;
+	top: 0px;
+	width: 100%;
+}		
