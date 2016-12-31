@@ -41,6 +41,8 @@ $('document').ready(function(){
 		var my = month + " " + year;
 		$(".my").text($.trim(my));
 	});
+
+
 });
 
 function updateTime(){
@@ -58,6 +60,10 @@ function updateTime(){
 	if(minutes < 10)
 		min = "0" + minutes;
 	var time = hours + ":" + min;
+	var month = months[date.getMonth()];
+	var year = date.getFullYear();
+	var my = month + " " + year;
+	$(".my").text($.trim(my));
 	$("#Time").text(time);
 	$("#moreve").text(moreve);
 	setTimeout(updateTime,60*1000);
