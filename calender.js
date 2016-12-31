@@ -1,52 +1,28 @@
-months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
 var openWeatherApikey = "&APPID=5b2b83256bb8a575f7d7f455786df3e9";
+var month, date, year;
 
-$('document').ready(function(){
-	updateTime();
-	// if(!navigator.geolocation)
-	// 	console.log("Geolocation not supported");	
-	// else
-	// 	navigator.geolocation.getCurrentPosition(success,error);
-	
-	$(".fa-chevron-up").click(function(){
-		
-		var monthAndYear = $.trim($(".my").text());
-		var temp = monthAndYear.split(" ");		
-		var month = $.trim(temp[0]);
-		var year = parseInt(temp[1]);
-		var index = months.indexOf(month);
-		if(month == "December"){
-			year = year + 1;
-			month = months[0];
-		}else{
-			month = months[months.indexOf(month) + 1];
-		}
-		var my = month + " " + year;
-		$(".my").text($.trim(my));
-	});
+$('document').ready(function() {
+    updateTime();
+    //if(!navigator.geolocation)
+    //    console.log("Geolocation not supported");
+    //else
+    //    navigator.geolocation.getCurrentPosition(success,error);
 
-	$(".fa-chevron-down").click(function(){
-		
-		var monthAndYear = $.trim($(".my").text());
-		var temp = monthAndYear.split(" ");		
-		var month = $.trim(temp[0]);
-		var year = parseInt(temp[1]);
-		var index = months.indexOf(month);
-		if(month == "January"){
-			year = year - 1;
-			month = months[11];
-		}else{
-			month = months[months.indexOf(month) - 1];
-		}
-		var my = month + " " + year;
-		$(".my").text($.trim(my));
-	});
+    var presentDate = new Date();
+    date = presentDate.getDate();
+    month = presentDate.getMonth();
+    year = presentDate.getFullYear();
 
-
+    // Set callbacks for up/down buttons
+    $(".fa-chevron-up").click(previousMonth);
+    $(".fa-chevron-down").click(nextMonth);
 });
 
-function updateTime(){
-	
+function updateTime() {
 	var date = new Date($.now());
 	var hours = date.getHours();
 	var moreve = "am";
@@ -69,15 +45,13 @@ function updateTime(){
 	setTimeout(updateTime,60*1000);
 }
 
-function success(position){
-	
+function success(position) {
 	latitude = position.coords.latitude;
 	longitude = position.coords.longitude;
 	updateWeather(latitude,longitude);
 }
 
 function updateWeather(latitude,longitude){
-
 	var base_url = "http://api.openweathermap.org/data/2.5/weather?";
 	var latlon = "lat=" + latitude + "&" + "lon=" + longitude;
 	var url = base_url + latlon + openWeatherApikey;
@@ -103,37 +77,39 @@ function updateWeather(latitude,longitude){
 	});
 }
 
-function error(){
+function error() {
 	console.log("Not able to retrieve location");
 }
 
-function returnDays(month,year){
+function getDays() {
+    // If the month is February, check for leap year and return accordingly
+    // otherwise direct lookup from daysInMonth array
+    if(month == 1) {
+        if(((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
+            return 29;
+        }
+    }
 
-	if(month == "January")
-		return 31;
-	else if(month == "February"){
-		if(year % 4 == 0)
-			return 29;
-		return 28;
-	}
-	else if(month == "March")
-		return 31;
-	else if(month == "April")
-		return 30;
-	else if(month == "May")
-		return 31;
-	else if(month == "June")
-		return 30;
-	else if(month == "July")
-		return 31;
-	else if(month == "August")
-		return 31;
-	else if(month == "September")
-		return 30;
-	else if(month == "October")
-		return 31;
-	else if(month == "November")
-		return 30;
-	else if(month == "December")
-		return 31;
+    return daysInMonth[month];
+}
+
+// Callback for clicking the up arrow
+function previousMonth() {
+    month--;
+    if (month == -1) {
+        month = 11;
+        year--;
+    }
+    var my = months[month] + " " + year;
+    $(".my").text($.trim(my));
+}
+
+// Callback for clicking the down arrow
+function nextMonth() {
+    month = (month + 1) % 12;
+    if (month == 0) {
+        year++;
+    }
+    var my = months[month] + " " + year;
+    $(".my").text($.trim(my));
 }
