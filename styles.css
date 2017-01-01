@@ -137,44 +137,17 @@ td{
 	vertical-align: top;
 	font-style: 
 }
+.col{
+	width: calc((100%-190px)/7);
+	border-right-style: solid;
+	border-right-color: #e5e6e7;
+	border-right-width: 2px;	
+}
 
-.col1{
-	width: calc((100%-190px)/7);
-	border-right-style: solid;
-	border-right-color: #e5e6e7;
-	border-right-width: 2px;
-	height: calc(100%5);
+.darkBackground{
+	background-color: #f8f8f8;
 }
-.col2{
-	width: calc((100%-190px)/7);
-	border-right-style: solid;
-	border-right-color: #e5e6e7;
-	border-right-width: 2px;
-}
-.col3{
-	width: calc((100%-190px)/7);
-	border-right-style: solid;
-	border-right-color: #e5e6e7;
-	border-right-width: 2px;
-}
-.col4{
-	width: calc((100%-190px)/7);
-	border-right-style: solid;
-	border-right-color: #e5e6e7;
-	border-right-width: 2px;
-}
-.col5{
-	width: calc((100%-190px)/7);
-	border-right-style: solid;
-	border-right-color: #e5e6e7;
-	border-right-width: 2px;
-}
-.col6{
-	width: calc((100%-190px)/7);
-	border-right-style: solid;
-	border-right-color: #e5e6e7;
-	border-right-width: 2px;
-}
-.col7{
-	border-right-width: 2px;
+
+.r2{
+	background-color: #f8f8f8;
 }
