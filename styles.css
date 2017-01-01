@@ -1,35 +1,32 @@
-#sidebar{
-	
+#sidebar {
 	background-color: #2ed39e;
 	height: 100%;
 	width: 190px;
 	position: fixed;left: 0;top: 0
 }
 
-#Time{
+#Time {
 	padding-left: 15px;
 	position: absolute; top: 70px;
 	font-size: 60px;
 	color: #ffffff
 }
 
-#moreve{
-	
+#moreve {
 	padding-left: 155px;
 	position: absolute; top: 125px;
 	font-size: 18px;
 	color: #ffffff;
 }
 
-#TodayTitle{
+#TodayTitle {
 	padding-left: 25px;
 	position: absolute; top: 210px;
 	color: #ffffff;
 	font-size: 13px;
 }
 
-#TodaySchedule{
-
+#TodaySchedule {
 	position: absolute; bottom: 200px;
 	width: 190px;
 	height: 160px;
@@ -37,44 +34,43 @@
 	color: #ffffff;
 }
 
-#WeatherTitle{
+#WeatherTitle {
 	padding-left: 25px;
 	position: absolute; bottom: 120px;
 	color: #ffffff;
 	font-size: 13px;
 }
 
-#weather{	
-	
+#weather {
 	position: absolute; bottom: 50px;
 	width: 190px;
 	height: 75px;
 	background-color: #2bc493;
 	color: #ffffff;
-}	
+}
 
-#maxtemp{
+#maxtemp {
 	padding-left: 80px;
 	position: absolute; bottom: 50px;
 	color: #ffffff;
 	font-size: 30px;
 }
 
-#mintemp{
+#mintemp {
 	padding-left: 120px;
 	position: absolute; bottom: 65px;
 	color: #ffffff;
-	font-size: 20px;	
+	font-size: 20px;
 }
 
-#weatherIcon{
+#weatherIcon {
 
 	padding-left: 25px;
 	position: absolute; bottom: 80px;
 	color: #ffffff;
 }
 
-#weatherType{
+#weatherType {
 
 	padding-left: 20px;
 	position: absolute; bottom: 45px;
@@ -82,7 +78,7 @@
 	font-size: 15px;
 }
 
-#MonthAndYear{	
+#MonthAndYear {
 	color: #2ed39e;
 	padding-left: 37%;
 	font-size: 16px;
@@ -92,13 +88,13 @@
 	padding-bottom: 5px;
 }
 
-#my{
+#my {
 	color: #2ed39e;
 	padding-top: 0px;
 	padding-left: 4px;
 }
 
-#MainCalendar{
+#MainCalendar {
 	height: 100%;
 	position: absolute;
 	left: 190px;
@@ -107,17 +103,17 @@
 	right: 50px;
 }
 
-#Calendar{
+#Calendar {
 	padding-left: 20px;
 }
 
-table{
+table {
 	width: calc(100% - 10px);
 	top:0px;
 	border-collapse: collapse;
 }
 
-th{
+th {
 	height: 20px;
 	font-size: 15px;
 	vertical-align: bottom;
@@ -125,7 +121,7 @@ th{
 	text-align: left;
 }
 
-td{
+td {
 	height: 100px;
 	color: #b3b3b3;
 	padding-top: 0px;
@@ -135,15 +131,16 @@ td{
 	border-top-color: #e5e6e7;
 	border-top-width: 2px;
 	vertical-align: top;
-	font-style: 
+	font-style:
 }
-.col{
+
+.col {
 	width: calc((100%-190px)/7);
 	border-right-style: solid;
 	border-right-color: #e5e6e7;
-	border-right-width: 2px;	
+	border-right-width: 2px;
 }
 
-.darkBackground{
+.darkBackground {
 	background-color: #f8f8f8;
 }
