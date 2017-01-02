@@ -9,3 +9,6 @@ class Event(models.Model):
 	endtime = models.DateTimeField('End time')
 	description = models.CharField(max_length = 1000000)
 
+	def __str__(self):
+		return self.name
+
