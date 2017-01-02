@@ -20,7 +20,23 @@ $('document').ready(function() {
     // Set callbacks for up/down buttons
     $(".fa-chevron-up").click(previousMonth);
     $(".fa-chevron-down").click(nextMonth);
+    setUI();
+
 });
+
+function setUI(){
+
+	$x = $.find("th");
+	$x[0].addClass(".darkBackground");
+	var date = new Date();
+	date.setDate(1);
+	// var i;
+	// for(i = 0;i <= firstDay;i = i + 1){
+	// 	var temp = i + 1;
+	// 	var col = "col" + temp;
+	// 	console.log(col);
+	// }
+}
 
 function updateTime() {
 	
@@ -47,12 +63,6 @@ function updateTime() {
 	$("#Time").text(time);
 	$("#moreve").text(moreve);
 	setTimeout(updateTime,60*1000);
-}
-
-function success(position) {
-	latitude = position.coords.latitude;
-	longitude = position.coords.longitude;
-	updateWeather(latitude,longitude);
 }
 
 function updateWeather(latitude,longitude){
@@ -82,9 +92,16 @@ function updateWeather(latitude,longitude){
 	});
 }
 
+function success(position) {
+	latitude = position.coords.latitude;
+	longitude = position.coords.longitude;
+	updateWeather(latitude,longitude);
+}
+
 function error() {
 	console.log("Not able to retrieve location");
 }
+
 
 function getDays() {
     // If the month is February, check for leap year and return accordingly
@@ -94,8 +111,7 @@ function getDays() {
             return 29;
         }
     }
-
-    return daysInMonth[month];
+	return daysInMonth[month];
 }
 
 // Callback for clicking the up arrow
