@@ -7,7 +7,6 @@ var month, date, year;
 
 $('document').ready(function() {
     updateTime();
-    updateMonthAndYear();
     //if(!navigator.geolocation)
     //    console.log("Geolocation not supported");
     //else
@@ -17,6 +16,7 @@ $('document').ready(function() {
     date = presentDate.getDate();
     month = presentDate.getMonth();
     year = presentDate.getFullYear();
+    updateMonthAndYear();
     updateCalendar();
 
     // Set callbacks for up/down buttons
@@ -26,7 +26,7 @@ $('document').ready(function() {
 });
 
 function updateMonthAndYear(){
-    var my = month + " " + year;
+    var my = months[month] + " " + year;
     $(".my").text($.trim(my));
 }
 
