@@ -7,6 +7,7 @@ var month, date, year;
 
 $('document').ready(function() {
     updateTime();
+    updateMonthAndYear();
     //if(!navigator.geolocation)
     //    console.log("Geolocation not supported");
     //else
@@ -21,22 +22,12 @@ $('document').ready(function() {
     // Set callbacks for up/down buttons
     $(".fa-chevron-up").click(previousMonth);
     $(".fa-chevron-down").click(nextMonth);
-    setUI();
 
 });
 
-function setUI(){
-
-	$x = $.find("th");
-	$x[0].addClass(".darkBackground");
-	var date = new Date();
-	date.setDate(1);
-	// var i;
-	// for(i = 0;i <= firstDay;i = i + 1){
-	// 	var temp = i + 1;
-	// 	var col = "col" + temp;
-	// 	console.log(col);
-	// }
+function updateMonthAndYear(){
+    var my = month + " " + year;
+    $(".my").text($.trim(my));
 }
 
 function updateTime() {
@@ -57,16 +48,15 @@ function updateTime() {
 		hr = "0" + hours;
 	var time = hr + ":" + min;
 	var month = months[date.getMonth()];
-	var year = date.getFullYear();
-	var my = month + " " + year;
-	$(".my").text($.trim(my));
+	var year = date.getFullYear();	
 	$("#Time").text(time);
 	$("#moreve").text(moreve);
 	setTimeout(updateTime,60*1000);
 }
 
 function updateWeather(latitude,longitude){
-	var base_url = "http://api.openweathermap.org/data/2.5/weather?";
+	
+    var base_url = "http://api.openweathermap.org/data/2.5/weather?";
 	var latlon = "lat=" + latitude + "&" + "lon=" + longitude;
 	var url = base_url + latlon + openWeatherApikey;
 	$.get(url,function(data,status){
@@ -89,6 +79,7 @@ function updateWeather(latitude,longitude){
 		$("#mintemp").text(minTemp);
 		$("#weatherType").text(weatherType);
 	});
+
 }
 
 function success(position) {
