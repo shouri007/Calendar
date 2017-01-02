@@ -3,13 +3,13 @@ var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "S
 var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 var openWeatherApikey = "&APPID=5b2b83256bb8a575f7d7f455786df3e9";
-var month, date, year;
+var month, date, year,appended;
 
 $('document').ready(function() {
     updateTime();
-    //if(!navigator.geolocation)
+    // if(!navigator.geolocation)
     //    console.log("Geolocation not supported");
-    //else
+    // else
     //    navigator.geolocation.getCurrentPosition(success,error);
 
     var presentDate = new Date();
@@ -20,8 +20,8 @@ $('document').ready(function() {
     updateCalendar();
 
     // Set callbacks for up/down buttons
-    $(".fa-chevron-up").click(previousMonth);
-    $(".fa-chevron-down").click(nextMonth);
+    $(".fa-chevron-up").click(nextMonth);
+    $(".fa-chevron-down").click(previousMonth);
 
 });
 
@@ -92,7 +92,6 @@ function error() {
 	console.log("Not able to retrieve location");
 }
 
-
 function getDays() {
     // If the month is February, check for leap year and return accordingly
     // otherwise direct lookup from daysInMonth array
@@ -127,6 +126,7 @@ function previousMonth() {
     }
     var my = months[month] + " " + year;
     $(".my").text($.trim(my));
+    deleteRow();
     updateCalendar();
 }
 
@@ -138,15 +138,30 @@ function nextMonth() {
     }
     var my = months[month] + " " + year;
     $(".my").text($.trim(my));
+    deleteRow();
     updateCalendar();
+
+}
+
+function deleteRow(){
+    if(appended){
+        $("#dayTable tr:last").remove();
+    }
+    appended = false;
 }
 
 // Called whenever month is changed, updates the dates on the calendar
 function updateCalendar() {
+    
     var firstDay = getFirstDay();
     var daysInPrev = getDaysPrevMonth();
     var dateIncrementer = 1;
-
+    
+    if(firstDay + getDays() + 1 > 35){
+        appended = true;
+        var newRow = "<tr><td class='col'>a</td><td class='col'>b</td><td class='col'>c</td><td class='col'>d</td><td class='col'>e</td><td class='col'>f</td><td class='col'>g</td></tr>";
+        $("#dayTable").append(newRow);
+    }
     // Sets the first row of dates and shades the dates of the previous month
     $('#dayTable tr:eq(1)').children().each(function(index, item) {
         if(index < firstDay) {
@@ -157,15 +172,15 @@ function updateCalendar() {
             $(item).removeClass("darkBackground");
         }
     });
-
     // Sets the dates of the remaining rows
     $('#dayTable tr:gt(1)').children().each(function(index, item) {
         $(item).text(dateIncrementer++);
+        $(item).removeClass("darkBackground");
     });
-
     // Shades the dates of the next month
     var lastDay = getLastDay();
     var nextMonthDate = 1;
+    console.log(lastDay);
     $('#dayTable tr:last').children().each(function(index, item) {
         if(index > lastDay) {
             $(item).text(nextMonthDate++);
@@ -182,7 +197,6 @@ function getFirstDay() {
     first.setMonth(month);
     first.setYear(year);
     first.setDate(1);
-    console.log(first.getDay());
     return first.getDay();
 }
 
