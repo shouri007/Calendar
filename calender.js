@@ -16,6 +16,7 @@ $('document').ready(function() {
     date = presentDate.getDate();
     month = presentDate.getMonth();
     year = presentDate.getFullYear();
+    updateCalendar();
 
     // Set callbacks for up/down buttons
     $(".fa-chevron-up").click(previousMonth);
@@ -39,7 +40,6 @@ function setUI(){
 }
 
 function updateTime() {
-	
 	var date = new Date($.now());
 	var hours = date.getHours();
 	var moreve = "am";
@@ -66,7 +66,6 @@ function updateTime() {
 }
 
 function updateWeather(latitude,longitude){
-	
 	var base_url = "http://api.openweathermap.org/data/2.5/weather?";
 	var latlon = "lat=" + latitude + "&" + "lon=" + longitude;
 	var url = base_url + latlon + openWeatherApikey;
@@ -114,6 +113,20 @@ function getDays() {
 	return daysInMonth[month];
 }
 
+function getDaysPrevMonth() {
+    // If the month is February, check for leap year and return accordingly
+    // otherwise direct lookup from daysInMonth array
+    if((month - 1) == 1) {
+        if(((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
+            return 29;
+        }
+    } else if(month == 0) {
+        return daysInMonth[11];
+    }
+
+    return daysInMonth[month - 1];
+}
+
 // Callback for clicking the up arrow
 function previousMonth() {
     month--;
@@ -123,15 +136,69 @@ function previousMonth() {
     }
     var my = months[month] + " " + year;
     $(".my").text($.trim(my));
+    updateCalendar();
 }
 
 // Callback for clicking the down arrow
 function nextMonth() {
-    
     month = (month + 1) % 12;
     if (month == 0) {
         year++;
     }
     var my = months[month] + " " + year;
     $(".my").text($.trim(my));
+    updateCalendar();
+}
+
+// Called whenever month is changed, updates the dates on the calendar
+function updateCalendar() {
+    var firstDay = getFirstDay();
+    var daysInPrev = getDaysPrevMonth();
+    var dateIncrementer = 1;
+
+    // Sets the first row of dates and shades the dates of the previous month
+    $('#dayTable tr:eq(1)').children().each(function(index, item) {
+        if(index < firstDay) {
+            $(item).text(daysInPrev - (firstDay - index - 1));
+            $(item).addClass("darkBackground");
+        } else {
+            $(item).text(dateIncrementer++);
+            $(item).removeClass("darkBackground");
+        }
+    });
+
+    // Sets the dates of the remaining rows
+    $('#dayTable tr:gt(1)').children().each(function(index, item) {
+        $(item).text(dateIncrementer++);
+    });
+
+    // Shades the dates of the next month
+    var lastDay = getLastDay();
+    var nextMonthDate = 1;
+    $('#dayTable tr:last').children().each(function(index, item) {
+        if(index > lastDay) {
+            $(item).text(nextMonthDate++);
+            $(item).addClass("darkBackground");
+        } else {
+            $(item).removeClass("darkBackground");
+        }
+    });
+}
+
+// Returns first day of the month (0-6 starting with Sunday)
+function getFirstDay() {
+    var first = new Date();
+    first.setMonth(month);
+    first.setYear(year);
+    first.setDate(1);
+    console.log(first.getDay());
+    return first.getDay();
+}
+
+function getLastDay() {
+    var last = new Date();
+    last.setMonth(month);
+    last.setYear(year);
+    last.setDate(getDays());
+    return last.getDay();
 }
