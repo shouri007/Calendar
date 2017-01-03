@@ -11,12 +11,13 @@ $('document').ready(function() {
     //    console.log("Geolocation not supported");
     // else
     //    navigator.geolocation.getCurrentPosition(success,error);
-
     var presentDate = new Date();
     date = presentDate.getDate();
+    console.log(date);
     month = presentDate.getMonth();
     year = presentDate.getFullYear();
     updateMonthAndYear();
+    updateMiniCalendar(date);
     updateCalendar();
 
     // Set callbacks for up/down buttons
@@ -28,8 +29,9 @@ $('document').ready(function() {
 function updateMonthAndYear(){
     var my = months[month] + " " + year;
     $(".my").text($.trim(my));
-}
+    $("#minimonth").text($.trim(my));
 
+}
 function updateTime() {
 	var date = new Date($.now());
 	var hours = date.getHours();
@@ -81,15 +83,112 @@ function updateWeather(latitude,longitude){
 	});
 
 }
-
 function success(position) {
 	latitude = position.coords.latitude;
 	longitude = position.coords.longitude;
 	updateWeather(latitude,longitude);
 }
-
 function error() {
 	console.log("Not able to retrieve location");
+}
+
+
+function updateMiniCalendar(){
+    
+    var firstDay = getFirstDay();
+    var daysInPrev = getDaysPrevMonth();
+    var dateIncrementer = 1;
+    
+    if(firstDay + getDays() + 1 > 35){
+        console.log("hello");
+        appended = true;
+        var newRow = "<tr><td class='mcol'>a</td><td class='mcol'>b</td><td class='mcol'>c</td><td class='mcol'>d</td><td class='mcol'>e</td><td class='mcol'>f</td><td class='mcol'>g</td></tr>";
+        $("#MiniDayTable").append(newRow);
+    }
+
+    // Sets the first row of dates and shades the dates of the previous month
+    $('#MiniDayTable tr:eq(1)').children().each(function(index, item) {
+        if(index < firstDay) {
+            $(item).text(daysInPrev - (firstDay - index - 1));
+            $(item).removeClass("mcol");
+        } else {
+            $(item).text(dateIncrementer++);
+            if(dateIncrementer - 1 == date){
+                $(item).removeClass("mcol");
+                $(item).addClass("mcolw");
+            }
+        }
+    });
+    // Sets the dates of the remaining rows
+    $('#MiniDayTable tr:gt(1)').children().each(function(index, item) {
+        $(item).text(dateIncrementer++);
+        if(dateIncrementer - 1== date){
+                $(item).removeClass("mcol");
+                $(item).addClass("mcolw");
+        }
+    });
+
+    // Shades the dates of the next month
+    var lastDay = getLastDay();
+    var nextMonthDate = 1;
+    $('#MiniDayTable tr:last').children().each(function(index, item) {
+        if(index > lastDay) {
+            $(item).text(nextMonthDate++);
+            $(item).removeClass("mcol");
+        }
+        if(dateIncrementer - 1 == date){
+                $(item).addClass("mcolw");
+                $(item).removeClass("mcol");
+        }
+    });
+}
+
+// Called whenever month is changed, updates the dates on the calendar
+function updateCalendar() {
+    
+    var firstDay = getFirstDay();
+    var daysInPrev = getDaysPrevMonth();
+    var dateIncrementer = 1;
+    
+
+    if(firstDay + getDays() + 1 > 35){
+        appended = true;
+        var newRow = "<tr><td class='col'>a</td><td class='col'>b</td><td class='col'>c</td><td class='col'>d</td><td class='col'>e</td><td class='col'>f</td><td class='col'>g</td></tr>";
+        $("#dayTable").append(newRow);
+    }
+    // Sets the first row of dates and shades the dates of the previous month
+    $('#dayTable tr:eq(1)').children().each(function(index, item) {
+        if(index < firstDay) {
+            $(item).text(daysInPrev - (firstDay - index - 1));
+            $(item).addClass("darkBackground");
+        } else {
+            $(item).text(dateIncrementer++);
+            $(item).removeClass("darkBackground");
+        }
+    });
+    // Sets the dates of the remaining rows
+    $('#dayTable tr:gt(1)').children().each(function(index, item) {
+        $(item).text(dateIncrementer++);
+        $(item).removeClass("darkBackground");
+    });
+    // Shades the dates of the next month
+    var lastDay = getLastDay();
+    var nextMonthDate = 1;
+    $('#dayTable tr:last').children().each(function(index, item) {
+        if(index > lastDay) {
+            $(item).text(nextMonthDate++);
+            $(item).addClass("darkBackground");
+        } else {
+            $(item).removeClass("darkBackground");
+        }
+    });
+}
+
+function deleteRow(){
+    if(appended){
+        $("#dayTable tr:last").remove();
+    }
+    appended = false;
 }
 
 function getDays() {
@@ -141,54 +240,6 @@ function nextMonth() {
     deleteRow();
     updateCalendar();
 
-}
-
-function deleteRow(){
-    if(appended){
-        $("#dayTable tr:last").remove();
-    }
-    appended = false;
-}
-
-// Called whenever month is changed, updates the dates on the calendar
-function updateCalendar() {
-    
-    var firstDay = getFirstDay();
-    var daysInPrev = getDaysPrevMonth();
-    var dateIncrementer = 1;
-    
-    if(firstDay + getDays() + 1 > 35){
-        appended = true;
-        var newRow = "<tr><td class='col'>a</td><td class='col'>b</td><td class='col'>c</td><td class='col'>d</td><td class='col'>e</td><td class='col'>f</td><td class='col'>g</td></tr>";
-        $("#dayTable").append(newRow);
-    }
-    // Sets the first row of dates and shades the dates of the previous month
-    $('#dayTable tr:eq(1)').children().each(function(index, item) {
-        if(index < firstDay) {
-            $(item).text(daysInPrev - (firstDay - index - 1));
-            $(item).addClass("darkBackground");
-        } else {
-            $(item).text(dateIncrementer++);
-            $(item).removeClass("darkBackground");
-        }
-    });
-    // Sets the dates of the remaining rows
-    $('#dayTable tr:gt(1)').children().each(function(index, item) {
-        $(item).text(dateIncrementer++);
-        $(item).removeClass("darkBackground");
-    });
-    // Shades the dates of the next month
-    var lastDay = getLastDay();
-    var nextMonthDate = 1;
-    console.log(lastDay);
-    $('#dayTable tr:last').children().each(function(index, item) {
-        if(index > lastDay) {
-            $(item).text(nextMonthDate++);
-            $(item).addClass("darkBackground");
-        } else {
-            $(item).removeClass("darkBackground");
-        }
-    });
 }
 
 // Returns first day of the month (0-6 starting with Sunday)
