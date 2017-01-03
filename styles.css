@@ -154,6 +154,7 @@
 }
 
 .col {
+	
 	width: calc((100%-190px)/7);
 	border-right-style: solid;
 	border-right-color: #e5e6e7;
@@ -194,4 +195,59 @@
 .mdarkBackgroud{
 	background-color: #2bc493;
 	color: #2ed39e;	
+}
+
+.eventDialog {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    top:80px;
+}
+
+.eventInfo {
+    background-color: #fefefe;
+    border: 1px solid #ff8787;
+    width:250px;
+    height:375px;
+}
+
+.close {
+    font-size: 20px;
+    top:2px;
+    float:right;
+    background-color:#ffffff;
+    border:none;
+    color:#b3b3b3    	
+}
+
+#dayndate{
+	padding-left: 15px;
+	color: #ff8787
+}
+
+.eventnamefield{
+	position:absolute;
+	left:15px;
+	height:25px;
+	font-size:15px;
+	width:200px;
+	padding-left:10px;
+}
+
+.locationfield{
+	position:absolute;
+	left:15px;
+	top:90px;
+	padding-left:10px;
+	width:200px;
+	height:20px;
+}
+
+.labelclass{
+	position: absolute;
+	left:15px;
+	top:130px;
+	font-size: 15px;
+	padding-left: 10px;
+	color:#b3b3b3;
 }
