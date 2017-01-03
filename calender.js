@@ -13,7 +13,6 @@ $('document').ready(function() {
     //    navigator.geolocation.getCurrentPosition(success,error);
     var presentDate = new Date();
     date = presentDate.getDate();
-    console.log(date);
     month = presentDate.getMonth();
     year = presentDate.getFullYear();
     updateMonthAndYear();
@@ -23,7 +22,13 @@ $('document').ready(function() {
     // Set callbacks for up/down buttons
     $(".fa-chevron-up").click(nextMonth);
     $(".fa-chevron-down").click(previousMonth);
-
+    
+    $(".col").click(function(){
+        var c_date = $(this).text() 
+        var cmy = getCurrentMonthNavigated();
+        var date = c_date + " " + cmy;
+        console.log(date);
+    });
 });
 
 function updateMonthAndYear(){
@@ -119,6 +124,7 @@ function updateMiniCalendar(){
             }
         }
     });
+
     // Sets the dates of the remaining rows
     $('#MiniDayTable tr:gt(1)').children().each(function(index, item) {
         $(item).text(dateIncrementer++);
@@ -150,7 +156,6 @@ function updateCalendar() {
     var daysInPrev = getDaysPrevMonth();
     var dateIncrementer = 1;
     
-
     if(firstDay + getDays() + 1 > 35){
         appended = true;
         var newRow = "<tr><td class='col'>a</td><td class='col'>b</td><td class='col'>c</td><td class='col'>d</td><td class='col'>e</td><td class='col'>f</td><td class='col'>g</td></tr>";
@@ -160,6 +165,7 @@ function updateCalendar() {
     $('#dayTable tr:eq(1)').children().each(function(index, item) {
         if(index < firstDay) {
             $(item).text(daysInPrev - (firstDay - index - 1));
+            $(item).removeClass("col");
             $(item).addClass("darkBackground");
         } else {
             $(item).text(dateIncrementer++);
@@ -177,6 +183,7 @@ function updateCalendar() {
     $('#dayTable tr:last').children().each(function(index, item) {
         if(index > lastDay) {
             $(item).text(nextMonthDate++);
+            $(item).removeClass("col");
             $(item).addClass("darkBackground");
         } else {
             $(item).removeClass("darkBackground");
@@ -189,6 +196,11 @@ function deleteRow(){
         $("#dayTable tr:last").remove();
     }
     appended = false;
+}
+
+function getCurrentMonthNavigated(){
+    var text = $(".my").text();
+    return text;
 }
 
 function getDays() {
