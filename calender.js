@@ -3,7 +3,7 @@ var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "S
 var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 var openWeatherApikey = "&APPID=5b2b83256bb8a575f7d7f455786df3e9";
-var month, date, year,appended;
+var month, date, year,appended,clickedcell,previouslyclickedcell;
 
 $('document').ready(function() {
     updateTime();
@@ -15,6 +15,8 @@ $('document').ready(function() {
     date = presentDate.getDate();
     month = presentDate.getMonth();
     year = presentDate.getFullYear();
+    var maincalenderpos = $("#MainCalendar").position();
+    console.log(maincalenderpos.left);
     updateMonthAndYear();
     updateMiniCalendar(date);
     updateCalendar();
@@ -22,13 +24,41 @@ $('document').ready(function() {
     // Set callbacks for up/down buttons
     $(".fa-chevron-up").click(nextMonth);
     $(".fa-chevron-down").click(previousMonth);
-    
+
+    //display event pop ups on click
     $(".col").click(function(){
+
+        previouslyclickedcell = clickedcell;
+        clickedcell = $(this);
         var c_date = $(this).text() 
         var cmy = getCurrentMonthNavigated();
-        var date = c_date + " " + cmy;
-        console.log(date);
+        var d_date = c_date + " " + cmy;
+        var position = $(this).position();
+        var cellleft = parseInt(position.left);
+        var celltop = parseInt(position.top);
+        var cellIndex = $(this).index();
+        var cellwidth = parseInt($(this).css("width"));
+        console.log(cellleft + " " + cellwidth);
+        if(cellIndex != 6){
+            var eventPosl = 190 + cellleft + cellwidth;
+            $(".eventDialog").css("left",eventPosl);
+            $(".eventDialog").css("top",celltop);
+        }else{
+            var eventPosl = cellleft - cellwidth/2;
+            $(".eventDialog").css("left",eventPosl);
+            $(".eventDialog").css("top",celltop);
+        }
+        $("#dayndate").text()
+        $(".eventDialog").show();
+        $(this).css("background-color","#2ed39e");
+        previouslyclickedcell.css("background-color","#ffffff")
+
     });
+
+    $(".close").click(function(){
+        $(".eventDialog").hide();
+        clickedcell.css("background-color","#ffffff");
+    })
 });
 
 function updateMonthAndYear(){
@@ -37,6 +67,7 @@ function updateMonthAndYear(){
     $("#minimonth").text($.trim(my));
 
 }
+
 function updateTime() {
 	var date = new Date($.now());
 	var hours = date.getHours();
@@ -170,12 +201,14 @@ function updateCalendar() {
         } else {
             $(item).text(dateIncrementer++);
             $(item).removeClass("darkBackground");
+            $(item).addClass("col");
         }
     });
     // Sets the dates of the remaining rows
     $('#dayTable tr:gt(1)').children().each(function(index, item) {
         $(item).text(dateIncrementer++);
         $(item).removeClass("darkBackground");
+        $(item).addClass("col");
     });
     // Shades the dates of the next month
     var lastDay = getLastDay();
@@ -187,6 +220,7 @@ function updateCalendar() {
             $(item).addClass("darkBackground");
         } else {
             $(item).removeClass("darkBackground");
+            $(item).addClass("col");
         }
     });
 }
