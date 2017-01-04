@@ -197,14 +197,14 @@
 	color: #2ed39e;	
 }
 
-.eventDialog {
+.neweventDialog {
     display: none;
     position: absolute;
     z-index: 1;
     top:80px;
 }
 
-.eventInfo {
+.neweventInfo {
     background-color: #fefefe;
     border: 1px solid #ff8787;
     width:250px;
@@ -250,4 +250,44 @@
 	font-size: 15px;
 	padding-left: 10px;
 	color:#b3b3b3;
+}
+
+#icons{
+	position: absolute;
+	top:15px;
+	right:50px;
+	color: #2ed39e;
+}
+
+#EventRectangle{
+	position:absolute;
+	width:500px;
+	height:15px;
+	border:1px solid #2ed39e;
+	top:120px;
+	left:210px;
+	padding-left:2px;
+	padding-top:5px;
+	padding-bottom:5px;
+	font-size:15px;
+	color:#2ed39e;
+}
+
+.eventDialog{
+    display: none;
+    position: absolute;
+    z-index: 1;
+    top:80px;
+}
+
+.eventInfo{
+	background-color: #fefefe;
+    border: 1px solid #ff8787;
+    width:250px;
+    height:375px;
+}
+
+#eventname{
+	padding-left:20px;
+	padding-top:10px;
 }
