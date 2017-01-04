@@ -16,7 +16,6 @@ $('document').ready(function() {
     month = presentDate.getMonth();
     year = presentDate.getFullYear();
     var maincalenderpos = $("#MainCalendar").position();
-    console.log(maincalenderpos.left);
     updateMonthAndYear();
     updateMiniCalendar(date);
     updateCalendar();
@@ -38,26 +37,49 @@ $('document').ready(function() {
         var celltop = parseInt(position.top);
         var cellIndex = $(this).index();
         var cellwidth = parseInt($(this).css("width"));
-        console.log(cellleft + " " + cellwidth);
         if(cellIndex != 6){
             var eventPosl = 190 + cellleft + cellwidth;
             $(".eventDialog").css("left",eventPosl);
             $(".eventDialog").css("top",celltop);
+            $(".neweventDialog").css("top",celltop);
+            $(".neweventDialog").css("left",eventPosl);
         }else{
             var eventPosl = cellleft - cellwidth/2;
             $(".eventDialog").css("left",eventPosl);
             $(".eventDialog").css("top",celltop);
+            $(".neweventDialog").css("top",celltop);
+            $(".neweventDialog").css("left",eventPosl);
         }
         $("#dayndate").text()
         $(".eventDialog").show();
         $(this).css("background-color","#2ed39e");
-        previouslyclickedcell.css("background-color","#ffffff")
+        if(previouslyclickedcell != null){
+            previouslyclickedcell.css("background-color","#ffffff");
+            previouslyclickedcell.css("color","#b3b3b3");
+        }
+        $(this).css("color","#ffffff");
+    });
 
+    $(".cancel").click(function(){
+        $(".neweventDialog").hide();
+        clickedcell.css("background-color","#ffffff");
+        clickedcell.css("color","#b3b3b3");
+    });
+
+    $(".save").click(function(){
+        $(".eventDialog").hide();
+        clickedcell.css("background-color","#ffffff");
     });
 
     $(".close").click(function(){
         $(".eventDialog").hide();
         clickedcell.css("background-color","#ffffff");
+        clickedcell.css("color","#b3b3b3");
+    });
+
+    $(".edit").click(function(){
+        $(".eventDialog").hide();
+        $(".neweventDialog").show();
     })
 });
 
