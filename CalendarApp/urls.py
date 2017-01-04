@@ -17,6 +17,6 @@ from django.conf.urls import include, url
 from django.contrib import admin
 
 urlpatterns = [
-	url(r'^ccalendar/',include('ccalendar.urls')),
+	url(r'^ccalendar/', include('ccalendar.urls')),
     url(r'^admin/', admin.site.urls),
 ]
