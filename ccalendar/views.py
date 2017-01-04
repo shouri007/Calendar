@@ -1,7 +1,11 @@
 import os
+import httplib2
+import datetime
+import calendar
 
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.http import JsonResponse
 from django.http import HttpResponseBadRequest
 from django.http import HttpResponseRedirect
 
@@ -19,13 +23,55 @@ CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), '..', 'client_secrets.j
 FLOW = flow_from_clientsecrets(
         CLIENT_SECRETS,
         SCOPES,
-        redirect_uri='http://localhost:8000/ccalendar/')
+        redirect_uri='http://localhost:8000/ccalendar/authcallback')
+
+U = User(
+        username = 'example',
+        firstname= 'default',
+        lastname= 'default',
+        email = 'example@gmail.com'
+)
 
 def index(request):
 	return HttpResponse("Hello, this is ccalendar index")
 
 def events(request, month, year):
-        return HttpResponse("year is" + year + " and month is " + month)
+        month = int(month)
+        year = int(year)
+        storage = DjangoORMStorage(CredentialsModel, 'id', U, 'credential')
+        credential = storage.get()
+        http = httplib2.Http()
+        http = credential.authorize(http)
+        service = build('calendar', 'v3', http=http)
+        monthStart = datetime.datetime(year, month, 1, 00, 00).isoformat() + 'Z'
+        lastDate = calendar.monthrange(year, month)[1]
+        monthEnd = datetime.datetime(year, month, lastDate, 23, 00).isoformat() + 'Z'
+
+        eventsResult = service.events().list(
+                calendarId='primary', timeMin=monthStart, timeMax=monthEnd, maxResults=15,
+                singleEvents=True, orderBy='startTime').execute()
+        events = eventsResult.get('items', [])
+        eventsArr = []
+        for event in events:
+                start = event['start'].get('dateTime', event['start'].get('date'))
+                end = event['end'].get('dateTime', event['end'].get('date'))
+                title = event['summary']
+                description = event.get('description', "Not Available")
+                where = event.get('location', 'Not Available')
+                item = {
+                        'start': start,
+                        'end': end,
+                        'title': title,
+                        'description': description,
+                        'location': where
+                }
+                eventsArr.append(item);
+
+        res = {}
+        res['result'] = 'SUCCESS'
+        res['data'] = eventsArr
+
+        return JsonResponse(res)
 
 def createEvent(request):
 	return HttpResponse("Hello, this is ccalendar create")
@@ -43,8 +89,8 @@ def delete(request):
 def googleSync(request):
         U = User(
                 username = 'example',
-                firstname= 'Bla Bla',
-                lastname= 'Bla Blaq',
+                firstname= 'default',
+                lastname= 'default',
                 email = 'example@gmail.com'
         )
         U.save()
@@ -54,14 +100,13 @@ def googleSync(request):
                 FLOW.params['state'] = xsrfutil.generate_token(settings.SECRET_KEY, U)
                 authorize_url = FLOW.step1_get_authorize_url()
                 return HttpResponseRedirect(authorize_url)
+        return HttpResponseRedirect('/ccalendar')
 
 
 def auth_return(request):
-  if not xsrfutil.validate_token(settings.SECRET_KEY, request.REQUEST['state'],
-                                 request.user):
+  if not xsrfutil.validate_token(settings.SECRET_KEY, (request.GET['state']).encode('utf-8'), U):
     return  HttpResponseBadRequest()
-  credential = FLOW.step2_exchange(request.REQUEST)
-  storage = Storage(CredentialsModel, 'id', request.user, 'credential')
+  credential = FLOW.step2_exchange(request.GET)
+  storage = DjangoORMStorage(CredentialsModel, 'id', U, 'credential')
   storage.put(credential)
-  return HttpResponse("Success logging in!")
-
+  return HttpResponseRedirect('/ccalendar')
