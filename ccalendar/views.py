@@ -3,7 +3,6 @@ import httplib2
 import datetime
 import calendar
 
-from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -11,6 +10,8 @@ from django.http import HttpResponseBadRequest
 from django.http import HttpResponseRedirect
 
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+
 from ccalendar.models import *
 from CalendarApp import settings
 from oauth2client.contrib import xsrfutil
@@ -35,11 +36,9 @@ U = User(
         email = 'example@gmail.com'
 )
 
-@csrf_protect
 def index(request):
         return render(request, "ccalendar/templates/index.html", {})
 
-@csrf_protect
 def events(request, month, year):
         month = int(month)
         year = int(year)
@@ -78,25 +77,20 @@ def events(request, month, year):
 
         return JsonResponse(res)
 
-@csrf_protect
 def createEvent(request):
   print("hello")
   return render(request,"ccalendar/index.html")
 
-@csrf_protect
+@csrf_exempt
 def update(request):
-  
-	return HttpResponse("Hello, this is ccalendar update")
+	return HttpResponse("Done");
 
-@csrf_protect
 def retrieve(request):
 	return HttpResponse("Hello, this is ccalendar retrieve")
 
-@csrf_protect
 def delete(request):
 	return HttpResponse("Hello, this is ccalendar delete")
 
-@csrf_protect
 def googleSync(request):
         U = User(
                 username = 'example',
