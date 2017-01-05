@@ -1,0 +1,387 @@
+var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+var days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+var openWeatherApikey = "&APPID=5b2b83256bb8a575f7d7f455786df3e9";
+var month, date, year,appended,clickedcell,previouslyclickedcell,csrftoken;
+
+$('document').ready(function() {
+    updateTime();
+    // if(!navigator.geolocation)
+    //    console.log("Geolocation not supported");
+    // else
+    //    navigator.geolocation.getCurrentPosition(success,error);
+    var presentDate = new Date();
+    date = presentDate.getDate();
+    month = presentDate.getMonth();
+    year = presentDate.getFullYear();
+    var maincalenderpos = $("#MainCalendar").position();
+    updateMonthAndYear();
+    updateMiniCalendar(date);
+    updateCalendar();
+
+    // Set callbacks for up/down buttons
+    $(".fa-chevron-up").click(nextMonth);
+    $(".fa-chevron-down").click(previousMonth);
+
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
+            }
+        }
+    });
+    
+    //display event pop ups on click
+    $(".col").click(function(){
+
+        previouslyclickedcell = clickedcell;
+        clickedcell = $(this);
+        var c_date = $(this).text() 
+        var cmy = getCurrentMonthNavigated();
+        var d_date = c_date + " " + cmy;
+        var position = $(this).position();
+        var cellleft = parseInt(position.left);
+        var celltop = parseInt(position.top);
+        var cellIndex = $(this).index();
+        var cellwidth = parseInt($(this).css("width"));
+        if(cellIndex != 6){
+            var eventPosl = 190 + cellleft + cellwidth;
+            $(".eventDialog").css("left",eventPosl);
+            $(".eventDialog").css("top",celltop);
+            $(".neweventDialog").css("top",celltop);
+            $(".neweventDialog").css("left",eventPosl);
+        }else{
+            var eventPosl = cellleft - cellwidth/2;
+            $(".eventDialog").css("left",eventPosl);
+            $(".eventDialog").css("top",celltop);
+            $(".neweventDialog").css("top",celltop);
+            $(".neweventDialog").css("left",eventPosl);
+        }
+        $("#dayndate").text()
+        $(".eventDialog").show();
+        $(this).css("background-color","#2ed39e");
+        if(previouslyclickedcell != null){
+            previouslyclickedcell.css("background-color","#ffffff");
+            previouslyclickedcell.css("color","#b3b3b3");
+        }
+        $(this).css("color","#ffffff");
+    });
+
+    $(".cancel").click(function(){
+        $(".neweventDialog").hide();
+        clickedcell.css("background-color","#ffffff");
+        clickedcell.css("color","#b3b3b3");
+    });
+
+    $(".save").click(function(){
+        $(".eventDialog").hide();
+        clickedcell.css("background-color","#ffffff");
+    });
+
+    $(".close").click(function(){
+        $(".eventDialog").hide();
+        clickedcell.css("background-color","#ffffff");
+        clickedcell.css("color","#b3b3b3");
+    });
+
+    $(".edit").click(function(){
+        $(".eventDialog").hide();
+        $(".neweventDialog").show();
+    })
+    createEvent();
+});
+
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+function retrieveDataForMonth(){
+
+}
+
+function csrfSafeMethod(method) {
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+
+function createEvent(){
+    
+    var base_url = "http://localhost:8000/ccalendar/";
+    var fun_url = "new";
+    var url = base_url + fun_url;
+    var data = {
+        "name" : "First Event",
+        "location" : "Daiict",
+        "starttime" : "today",
+        "endtime" : "tomorrow",
+        "description" : "Test",
+        "CSRF" : csrftoken
+    };
+
+    $.ajax({
+        method:'POST',
+        url:url,
+        contentType:"application/jsonp",
+        data:data,
+        success:function(){
+            console.log("success");
+        }
+    });
+}
+
+function updateMonthAndYear(){
+    var my = months[month] + " " + year;
+    $(".my").text($.trim(my));
+    $("#minimonth").text($.trim(my));
+
+}
+
+function updateTime() {
+	var date = new Date($.now());
+	var hours = date.getHours();
+	var moreve = "am";
+	if(hours >= 12){
+		moreve = "pm";
+		if(hours != 12)
+			hours = hours % 12;
+	}
+	var minutes = date.getMinutes();
+	var min = minutes;
+	var hr = hours;
+	if(minutes < 10)
+		min = "0" + minutes;
+	if(hours < 10)
+		hr = "0" + hours;
+	var time = hr + ":" + min;
+	var month = months[date.getMonth()];
+	var year = date.getFullYear();	
+	$("#Time").text(time);
+	$("#moreve").text(moreve);
+	setTimeout(updateTime,60*1000);
+}
+
+function updateWeather(latitude,longitude){
+	
+    var base_url = "http://api.openweathermap.org/data/2.5/weather?";
+	var latlon = "lat=" + latitude + "&" + "lon=" + longitude;
+	var url = base_url + latlon + openWeatherApikey;
+	$.get(url,function(data,status){
+		var weather = data["weather"];
+		var weatherType = weather[0].main;
+		var main = data["main"];
+		var maxTemp = Math.round(main["temp_max"] - 273);
+		var minTemp = Math.round(main["temp_min"] - 273);
+		minTemp = minTemp + " " + String.fromCharCode(176) + "C";
+		console.log(weatherType);
+		if(weatherType == "cloudy"){
+			$("#weatherIcon").replaceWith("<i  id='weatherIcon' class='fa fa-cloud fa-2x'></i>");
+		}
+		else if(weatherType == "Haze"){
+			$("#weatherIcon").replaceWith("<i class='fa fa-bolt fa-2x' id='weatherIcon'></i>");
+		}else if(weatherType == "Sunny"){
+			$("#weatherIcon").replaceWith("<i class='fa fa-sun-o fa-2x' id='weatherIcon'></i>");
+		}
+		$("#maxtemp").text(maxTemp);
+		$("#mintemp").text(minTemp);
+		$("#weatherType").text(weatherType);
+	});
+
+}
+function success(position) {
+	latitude = position.coords.latitude;
+	longitude = position.coords.longitude;
+	updateWeather(latitude,longitude);
+}
+
+function error() {
+	console.log("Not able to retrieve location");
+}
+
+function updateMiniCalendar(){
+    
+    var firstDay = getFirstDay();
+    var daysInPrev = getDaysPrevMonth();
+    var dateIncrementer = 1;
+    
+    if(firstDay + getDays() + 1 > 35){
+        console.log("hello");
+        appended = true;
+        var newRow = "<tr><td class='mcol'>a</td><td class='mcol'>b</td><td class='mcol'>c</td><td class='mcol'>d</td><td class='mcol'>e</td><td class='mcol'>f</td><td class='mcol'>g</td></tr>";
+        $("#MiniDayTable").append(newRow);
+    }
+
+    // Sets the first row of dates and shades the dates of the previous month
+    $('#MiniDayTable tr:eq(1)').children().each(function(index, item) {
+        if(index < firstDay) {
+            $(item).text(daysInPrev - (firstDay - index - 1));
+            $(item).removeClass("mcol");
+        } else {
+            $(item).text(dateIncrementer++);
+            if(dateIncrementer - 1 == date){
+                $(item).removeClass("mcol");
+                $(item).addClass("mcolw");
+            }
+        }
+    });
+
+    // Sets the dates of the remaining rows
+    $('#MiniDayTable tr:gt(1)').children().each(function(index, item) {
+        $(item).text(dateIncrementer++);
+        if(dateIncrementer - 1== date){
+                $(item).removeClass("mcol");
+                $(item).addClass("mcolw");
+        }
+    });
+
+    // Shades the dates of the next month
+    var lastDay = getLastDay();
+    var nextMonthDate = 1;
+    $('#MiniDayTable tr:last').children().each(function(index, item) {
+        if(index > lastDay) {
+            $(item).text(nextMonthDate++);
+            $(item).removeClass("mcol");
+        }
+        if(dateIncrementer - 1 == date){
+                $(item).addClass("mcolw");
+                $(item).removeClass("mcol");
+        }
+    });
+}
+
+// Called whenever month is changed, updates the dates on the calendar
+function updateCalendar() {
+    
+    var firstDay = getFirstDay();
+    var daysInPrev = getDaysPrevMonth();
+    var dateIncrementer = 1;
+    
+    if(firstDay + getDays() + 1 > 35){
+        appended = true;
+        var newRow = "<tr><td class='col'>a</td><td class='col'>b</td><td class='col'>c</td><td class='col'>d</td><td class='col'>e</td><td class='col'>f</td><td class='col'>g</td></tr>";
+        $("#dayTable").append(newRow);
+    }
+    // Sets the first row of dates and shades the dates of the previous month
+    $('#dayTable tr:eq(1)').children().each(function(index, item) {
+        if(index < firstDay) {
+            $(item).text(daysInPrev - (firstDay - index - 1));
+            $(item).removeClass("col");
+            $(item).addClass("darkBackground");
+        } else {
+            $(item).text(dateIncrementer++);
+            $(item).removeClass("darkBackground");
+            $(item).addClass("col");
+        }
+    });
+    // Sets the dates of the remaining rows
+    $('#dayTable tr:gt(1)').children().each(function(index, item) {
+        $(item).text(dateIncrementer++);
+        $(item).removeClass("darkBackground");
+        $(item).addClass("col");
+    });
+    // Shades the dates of the next month
+    var lastDay = getLastDay();
+    var nextMonthDate = 1;
+    $('#dayTable tr:last').children().each(function(index, item) {
+        if(index > lastDay) {
+            $(item).text(nextMonthDate++);
+            $(item).removeClass("col");
+            $(item).addClass("darkBackground");
+        } else {
+            $(item).removeClass("darkBackground");
+            $(item).addClass("col");
+        }
+    });
+}
+
+function deleteRow(){
+    if(appended){
+        $("#dayTable tr:last").remove();
+    }
+    appended = false;
+}
+
+function getCurrentMonthNavigated(){
+    var text = $(".my").text();
+    return text;
+}
+
+function getDays() {
+    // If the month is February, check for leap year and return accordingly
+    // otherwise direct lookup from daysInMonth array
+    if(month == 1) {
+        if(((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
+            return 29;
+        }
+    }
+	return daysInMonth[month];
+}
+
+function getDaysPrevMonth() {
+    // If the month is February, check for leap year and return accordingly
+    // otherwise direct lookup from daysInMonth array
+    if((month - 1) == 1) {
+        if(((year % 4 == 0) && (year % 100 != 0)) || (year % 400 == 0)) {
+            return 29;
+        }
+    } else if(month == 0) {
+        return daysInMonth[11];
+    }
+
+    return daysInMonth[month - 1];
+}
+
+// Callback for clicking the up arrow
+function previousMonth() {
+    month--;
+    if (month == -1) {
+        month = 11;
+        year--;
+    }
+    var my = months[month] + " " + year;
+    $(".my").text($.trim(my));
+    deleteRow();
+    updateCalendar();
+}
+
+// Callback for clicking the down arrow
+function nextMonth() {
+    month = (month + 1) % 12;
+    if (month == 0) {
+        year++;
+    }
+    var my = months[month] + " " + year;
+    $(".my").text($.trim(my));
+    deleteRow();
+    updateCalendar();
+
+}
+
+// Returns first day of the month (0-6 starting with Sunday)
+function getFirstDay() {
+    var first = new Date();
+    first.setMonth(month);
+    first.setYear(year);
+    first.setDate(1);
+    return first.getDay();
+}
+
+function getLastDay() {
+    var last = new Date();
+    last.setMonth(month);
+    last.setYear(year);
+    last.setDate(getDays());
+    return last.getDay();
+}
