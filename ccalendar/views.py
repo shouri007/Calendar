@@ -36,8 +36,8 @@ U = User(
 )
 
 @csrf_protect
-def index(request):sS
-        return render(request, "ccalendar/templates/index.html", {'static':BASE_DIR})
+def index(request):
+        return render(request, "ccalendar/templates/index.html", {})
 
 @csrf_protect
 def events(request, month, year):
