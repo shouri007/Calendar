@@ -23,6 +23,7 @@ $('document').ready(function() {
     // Set callbacks for up/down buttons
     $(".fa-chevron-up").click(nextMonth);
     $(".fa-chevron-down").click(previousMonth);
+    $(".fa-refresh").click(googleSync);
 
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
@@ -32,7 +33,7 @@ $('document').ready(function() {
             }
         }
     });
-    
+
     //display event pop ups on click
     $(".col").click(function(){
 
@@ -167,7 +168,7 @@ function updateTime() {
 		hr = "0" + hours;
 	var time = hr + ":" + min;
 	var month = months[date.getMonth()];
-	var year = date.getFullYear();	
+	var year = date.getFullYear();
 	$("#Time").text(time);
 	$("#moreve").text(moreve);
 	setTimeout(updateTime,60*1000);
@@ -384,4 +385,8 @@ function getLastDay() {
     last.setYear(year);
     last.setDate(getDays());
     return last.getDay();
+}
+
+function googleSync() {
+    window.location.replace("http://localhost:8000/ccalendar/sync");
 }
