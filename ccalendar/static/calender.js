@@ -21,11 +21,11 @@ $('document').ready(function() {
     updateMonthAndYear();
     updateMiniCalendar(date);
     updateCalendar();
-
+    retrieveEvents();
     // Set callbacks for up/down buttons
     $(".fa-chevron-up").click(nextMonth);
     $(".fa-chevron-down").click(previousMonth);
-    $(".fa-refresh").click(googleSync);
+    $(".fa-refresh").click(syncWithGoogle);
 
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
@@ -173,11 +173,18 @@ function createEvent(){
 function retrieveEvents(){
     
     var url = "http://localhost:8000/ccalendar/events/";
-    var locmon;
+    var locmon = month + 1;
     if(month < 10)
-        locmon = '0' + month;
-    url = locmon+"/"+year;
-    console.log(url);
+        locmon = '0' + locmon;
+    url = url + locmon + "/" + year;
+    $.ajax({
+            method:'GET',
+            url:url,
+            contentType:"application/json",
+            success:function(data){
+                console.log(data);
+            }
+    });
 }
 
 function editEvent(){
@@ -460,10 +467,12 @@ function previousMonth() {
     $(".my").text($.trim(my));
     deleteRow();
     updateCalendar();
+    retrieveEvents();
 }
 
 // Callback for clicking the down arrow
 function nextMonth() {
+    
     month = (month + 1) % 12;
     if (month == 0) {
         year++;
@@ -472,6 +481,7 @@ function nextMonth() {
     $(".my").text($.trim(my));
     deleteRow();
     updateCalendar();
+    retrieveEvents();
 }
 
 // Returns first day of the month (0-6 starting with Sunday)
