@@ -3,6 +3,7 @@ import httplib2
 import datetime
 import calendar
 
+from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.http import JsonResponse
@@ -34,9 +35,11 @@ U = User(
         email = 'example@gmail.com'
 )
 
-def index(request):
+@csrf_protect
+def index(request):sS
         return render(request, "ccalendar/templates/index.html", {'static':BASE_DIR})
 
+@csrf_protect
 def events(request, month, year):
         month = int(month)
         year = int(year)
@@ -75,19 +78,25 @@ def events(request, month, year):
 
         return JsonResponse(res)
 
+@csrf_protect
 def createEvent(request):
-	return HttpResponse("Hello, this is ccalendar create")
+  print("hello")
+  return render(request,"ccalendar/index.html")
 
+@csrf_protect
 def update(request):
-        print "here yo"
+  
 	return HttpResponse("Hello, this is ccalendar update")
 
+@csrf_protect
 def retrieve(request):
 	return HttpResponse("Hello, this is ccalendar retrieve")
 
+@csrf_protect
 def delete(request):
 	return HttpResponse("Hello, this is ccalendar delete")
 
+@csrf_protect
 def googleSync(request):
         U = User(
                 username = 'example',
@@ -104,7 +113,6 @@ def googleSync(request):
                 return HttpResponseRedirect(authorize_url)
         return HttpResponseRedirect('/ccalendar')
 
-
 def auth_return(request):
   if not xsrfutil.validate_token(settings.SECRET_KEY, (request.GET['state']).encode('utf-8'), U):
     return  HttpResponseBadRequest()
@@ -112,3 +120,4 @@ def auth_return(request):
   storage = DjangoORMStorage(CredentialsModel, 'id', U, 'credential')
   storage.put(credential)
   return HttpResponseRedirect('/ccalendar')
+

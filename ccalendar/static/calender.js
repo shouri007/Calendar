@@ -4,6 +4,8 @@ var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 var openWeatherApikey = "&APPID=5b2b83256bb8a575f7d7f455786df3e9";
 var month, date, year,appended,clickedcell,previouslyclickedcell,csrftoken;
+var name,location,starttime,endtime,description;
+var editingSave=false;
 
 $('document').ready(function() {
     updateTime();
@@ -47,6 +49,7 @@ $('document').ready(function() {
         var celltop = parseInt(position.top);
         var cellIndex = $(this).index();
         var cellwidth = parseInt($(this).css("width"));
+        $(".datepicker").datepicker();
         if(cellIndex != 6){
             var eventPosl = 190 + cellleft + cellwidth;
             $(".eventDialog").css("left",eventPosl);
@@ -61,7 +64,7 @@ $('document').ready(function() {
             $(".neweventDialog").css("left",eventPosl);
         }
         $("#dayndate").text()
-        $(".eventDialog").show();
+        $(".neweventDialog").show();
         $(this).css("background-color","#2ed39e");
         if(previouslyclickedcell != null){
             previouslyclickedcell.css("background-color","#ffffff");
@@ -77,12 +80,16 @@ $('document').ready(function() {
     });
 
     $(".save").click(function(){
-        $(".eventDialog").hide();
+        // $(".eventDialog").hide();
         clickedcell.css("background-color","#ffffff");
+        createEvent();
+        $(".neweventDialog").hide();
+
     });
 
     $(".close").click(function(){
         $(".eventDialog").hide();
+        $(".neweventDialog").hide();
         clickedcell.css("background-color","#ffffff");
         clickedcell.css("color","#b3b3b3");
     });
@@ -90,10 +97,22 @@ $('document').ready(function() {
     $(".edit").click(function(){
         $(".eventDialog").hide();
         $(".neweventDialog").show();
+        editingSave = true;
     })
-    createEvent();
+
+    $(".delete").click(function(){
+        deleteEvent();
+        $(".eventDialog").hide();
+        clickedcell.css("background-color","#ffffff");
+        clickedcell.css("color","#b3b3b3");
+    })
+
+    $(".fa-refresh").click(function(){
+        syncWithGoogle();
+    })
 });
 
+//**********************************CRSF Methods*********************************************//
 function getCookie(name) {
     var cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -110,30 +129,105 @@ function getCookie(name) {
     return cookieValue;
 }
 
-function retrieveDataForMonth(){
-
-}
-
 function csrfSafeMethod(method) {
     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 }
+//**********************************EndOf CRSF Methods*********************************************//
+
+
+//***************************************CRUD requests******************************************//
 
 function createEvent(){
     
-    var base_url = "http://localhost:8000/ccalendar/";
-    var fun_url = "new";
-    var url = base_url + fun_url;
+    if(editingSave == true){
+        editEvent();
+    }
+    else{
+        name = $(".eventnamefield").val();
+        var loc = $(".locfield").val();
+        starttime = $("#startdate").val();
+        endtime = $("#enddate").val();
+        description = $(".description").val();
+
+        var url = "http://localhost:8000/ccalendar/edit";
+        var data = {
+            "name" : name,
+            "location" : loc,
+            "starttime" : starttime,
+            "endtime" : endtime,
+            "description" : description,
+            "CSRF" : csrftoken
+        };
+        $.ajax({
+            method:'POST',
+            url:url,
+            contentType:"application/jsonp",
+            data:data,
+            success:function(){
+                console.log("success");
+            }
+        });
+    }
+}
+
+function retrieveEvents(){
+    
+    var url = "http://localhost:8000/ccalendar/events/";
+    var locmon;
+    if(month < 10)
+        locmon = '0' + month;
+    url = locmon+"/"+year;
+    console.log(url);
+}
+
+function editEvent(){
+    
+    name = $(".eventnamefield").val();
+    var loc = $(".locfield").val();
+    starttime = $("#startdate").val();
+    endtime = $("#enddate").val();
+    description = $(".description").val();
+
+    var url = "http://localhost:8000/ccalendar/edit";
     var data = {
-        "name" : "First Event",
-        "location" : "Daiict",
-        "starttime" : "today",
-        "endtime" : "tomorrow",
-        "description" : "Test",
+        "name" : name,
+        "location" : loc,
+        "starttime" : starttime,
+        "endtime" : endtime,
+        "description" : description,
         "CSRF" : csrftoken
     };
-
     $.ajax({
-        method:'POST',
+        method:'PUT',
+        url:url,
+        contentType:"application/jsonp",
+        data:data,
+        success:function(){
+            console.log("success");
+        }
+    });
+    editingSave = false;
+}
+
+function deleteEvent(){
+
+    name = $(".eventnamefield").val();
+    var loc = $(".locfield").val();
+    starttime = $("#startdate").val();
+    endtime = $("#enddate").val();
+    description = $(".description").val();
+
+    var url = "http://localhost:8000/ccalendar/edit";
+    var data = {
+        "name" : name,
+        "location" : loc,
+        "starttime" : starttime,
+        "endtime" : endtime,
+        "description" : description,
+        "CSRF" : csrftoken
+    };
+    $.ajax({
+        method:'DELETE',
         url:url,
         contentType:"application/jsonp",
         data:data,
@@ -142,7 +236,14 @@ function createEvent(){
         }
     });
 }
+//*****************************************EndOf CRUD Requests********************************************//
 
+//GoogleSync Function
+function syncWithGoogle(){
+    window.location.replace("http://localhost:8000/ccalendar/sync");
+}
+
+//*****************************************UI setting functions*******************************************//
 function updateMonthAndYear(){
     var my = months[month] + " " + year;
     $(".my").text($.trim(my));
@@ -210,7 +311,9 @@ function success(position) {
 function error() {
 	console.log("Not able to retrieve location");
 }
+//*****************************************End of UI setting functions*******************************************//
 
+//*****************************************Calendar Functions***************************************************//
 function updateMiniCalendar(){
     
     var firstDay = getFirstDay();
@@ -306,7 +409,9 @@ function updateCalendar() {
         }
     });
 }
+//*****************************************EndOf Calendar Functions***************************************************//
 
+//*****************************************UI Supporting functions****************************************************//
 function deleteRow(){
     if(appended){
         $("#dayTable tr:last").remove();
@@ -367,7 +472,6 @@ function nextMonth() {
     $(".my").text($.trim(my));
     deleteRow();
     updateCalendar();
-
 }
 
 // Returns first day of the month (0-6 starting with Sunday)
@@ -386,7 +490,4 @@ function getLastDay() {
     last.setDate(getDays());
     return last.getDay();
 }
-
-function googleSync() {
-    window.location.replace("http://localhost:8000/ccalendar/sync");
-}
+//*****************************************EndOf UI Supporting functions****************************************************//

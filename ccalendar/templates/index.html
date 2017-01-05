@@ -3,13 +3,14 @@
 <head>
 	<title>
 	</title>
-  {%load static%}
 	<link rel="stylesheet" type="text/css" href="/static/styles.css">
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 	<script type="text/javascript" src="/static/calender.js"></script>
+	<script src="http://code.jquery.com/ui/1.12.0/jquery-ui.js" integrity="sha256-0YPKAwZP7Mp3ALMRVB2i8GXeEndvCq3eSl/WsAl1Ryk=" crossorigin="anonymous"></script>
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body style="overflow-x: hidden;">
+	{% csrf_token%}	
 	<div id="sidebar">
 		<p id="minimonth">
 			June 2016
@@ -164,11 +165,50 @@
   		<div class="neweventInfo">
     		<button class="close">x</button>
     		<p id="dayndate">fasdjkf</p>
-    		<input type="text" class="eventnamefield" name="eventname" placeholder="Event Name">
-    		<input type="text" class="locationfield" name="locationname" placeholder="Location">
+    		<input type="text" class="eventnamefield" placeholder="Event Name">
+    		<input type="text" class="locfield" placeholder="Location">
     		<label class="labelclass">Starts</label>
+    		<input id="startdate" style="position: absolute;top:145px;left:15px;height: 10px;width:120px;" type="text" class="datepicker">
+    		<label class="labelclass" style="top:170px;">Ends</label>
+    		<input id="enddate" style="position: absolute;top:185px;left:15px;height: 10px;width:120px;" type="text" class="datepicker">
+ 			<select id="starttime" style="position: absolute;top:145px;left:145px;height: 10px;">
+  				<option>1:00</option>
+  				<option>2:00</option>
+  				<option>3:00</option>
+  				<option>4:00</option>
+  				<option>5:00</option>
+  				<option>6:00</option>
+  				<option>7:00</option>
+  				<option>8:00</option>
+  				<option>9:00</option>
+  				<option>10:00</option>
+  				<option>11:00</option>
+  				<option>12:00</option>
+			</select>
+			<select id="strampm" style="position: absolute;top:145px;left:200px;height: 10px;">
+  				<option>am</option>
+  				<option>pm</option>
+			</select>		
+			<select id="endtime" style="position: absolute;top:185px;left:145px;height: 10px;">
+  				<option>1:00</option>
+  				<option>2:00</option>
+  				<option>3:00</option>
+  				<option>4:00</option>
+  				<option>5:00</option>
+  				<option>6:00</option>
+  				<option>7:00</option>
+  				<option>8:00</option>
+  				<option>9:00</option>
+  				<option>10:00</option>
+  				<option>11:00</option>
+  				<option>12:00</option>
+			</select>
+			<select id="endampm" style="position: absolute;top:185px;left:200px;height: 10px;">
+  				<option>am</option>
+  				<option>pm</option>
+			</select>		
     		<label class="labelclass" style="top:210px;">Description</label>
-    		<textarea style="position: absolute;top:230px;left:15px;height: 90px;width:220px;"></textarea>
+    		<textarea class="description" style="position: absolute;top:230px;left:15px;height: 90px;width:220px;"></textarea>
     		<button class="cancel" style="border-style: solid;background-color: #e5e6e7;position: absolute;bottom: 10px;left: 15px;font-size: 20px;border-color: #e5e6e7;color: #777777">Cancel</button>
     		<button class="save" style="border-style: solid;background-color: #ff8787;position: absolute;bottom:10px;left: 160px;font-size: 20px;border-color: #ff8787;color: #ffffff;width: 80px;">Save</button>
   		</div>
