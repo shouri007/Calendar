@@ -4,7 +4,7 @@ var daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
 var openWeatherApikey = "&APPID=5b2b83256bb8a575f7d7f455786df3e9";
 var month, date, year,appended,clickedcell,previouslyclickedcell,csrftoken;
-var name,location,starttime,endtime,description;
+var name,loc,starttime,endtime,description;
 var editingSave=false;
 
 $('document').ready(function() {
@@ -21,11 +21,12 @@ $('document').ready(function() {
     updateMonthAndYear();
     updateMiniCalendar(date);
     updateCalendar();
-    retrieveEvents();
+    //retrieveEvents();
+    displayEvents();
     // Set callbacks for up/down buttons
     $(".fa-chevron-up").click(nextMonth);
     $(".fa-chevron-down").click(previousMonth);
-    $(".fa-refresh").click(syncWithGoogle);
+   //$(".fa-refresh").click(syncWithGoogle);
 
     $.ajaxSetup({
         beforeSend: function(xhr, settings) {
@@ -182,7 +183,7 @@ function retrieveEvents(){
             url:url,
             contentType:"application/json",
             success:function(data){
-                console.log(data);
+                displayEvents(data["data"]);
             }
     });
 }
@@ -318,6 +319,57 @@ function success(position) {
 function error() {
 	console.log("Not able to retrieve location");
 }
+
+function displayEvents(){
+
+    events = [{"start": "2016-12-16", 
+    "location": "33, Ranga Pillai Street, Next to Nilgiri's Super Market, Puducherry, 605001, India", 
+    "end": "2016-12-19", 
+    "description": "To see detailed information for automatically created events like this one, use the official Google Calendar app. https://g.co/calendar\n\nThis event was created from an email you received in Gmail. https://mail.google.com/mail?extsrc=cal&plid=ACUX6DNpxYOByPKuBJSa3uHF0JUfRsqLre5CiWo\n", 
+    "title": "Stay at Pleasant Inn Pondicherry"},
+    {"start": "2016-12-09", 
+    "location": "33, Ranga Pillai Street, Next to Nilgiri's Super Market, Puducherry, 605001, India", 
+    "end": "2016-12-10", 
+    "description": "To see detailed information for automatically created events like this one, use the official Google Calendar app. https://g.co/calendar\n\nThis event was created from an email you received in Gmail. https://mail.google.com/mail?extsrc=cal&plid=ACUX6DNpxYOByPKuBJSa3uHF0JUfRsqLre5CiWo\n", 
+    "title": "test"},
+    {"start": "2016-12-22", 
+    "location": "33, Ranga Pillai Street, Next to Nilgiri's Super Market, Puducherry, 605001, India", 
+    "end": "2016-12-24", 
+    "description": "To see detailed information for automatically created events like this one, use the official Google Calendar app. https://g.co/calendar\n\nThis event was created from an email you received in Gmail. https://mail.google.com/mail?extsrc=cal&plid=ACUX6DNpxYOByPKuBJSa3uHF0JUfRsqLre5CiWo\n", 
+    "title": "test11"}
+    ];
+    console.log(events.length);
+    var i = 0;
+    for(i = 0;i < events.length; i++){        
+        name = events[i]["title"];
+        console.log(name);
+        var location = events[i]["location"];
+        var startDate = new Date(events[i]["start"]);
+        console.log(startDate.getDate());
+        var enddate = new Date(events[i]["end"]);
+        console.log(enddate.getDate());
+        description = events[i]["description"];
+        var span = enddate.getDate() - startDate.getDate();
+        console.log(span);
+        $('#dayTable tr').children().each(function(index, item) {
+            if($(item).text() == startDate.getDate()){
+                var position = $(item).position();
+                var w = (span + 1) * parseInt($(item).css("width"),10);
+                console.log(w);
+                var left = position.left;
+                var top = position.top + 15;
+                var st1 = "<div id='EventRectangle' style='width:" + w + "px;" 
+                var l_style = "left:" + left + "px;"
+                var t_style = "top:" + top + "px;'" + ">"
+                var str = st1 + l_style + t_style;
+                var st2 = name + "</div>";
+                var fin = str + st2;
+                $(item).append(fin);
+            }
+        });
+    }
+}
+
 //*****************************************End of UI setting functions*******************************************//
 
 //*****************************************Calendar Functions***************************************************//

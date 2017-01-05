@@ -260,9 +260,8 @@
 }
 
 #EventRectangle{
+	
 	position:absolute;
-	width:500px;
-	height:15px;
 	border:1px solid #2ed39e;
 	top:120px;
 	left:210px;
