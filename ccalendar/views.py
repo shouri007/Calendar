@@ -19,6 +19,8 @@ from googleapiclient.discovery import build
 
 SCOPES = 'https://www.googleapis.com/auth/calendar'
 CLIENT_SECRETS = os.path.join(os.path.dirname(__file__), '..', 'client_secrets.json')
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 FLOW = flow_from_clientsecrets(
         CLIENT_SECRETS,
@@ -33,7 +35,7 @@ U = User(
 )
 
 def index(request):
-	return HttpResponse("Hello, this is ccalendar index")
+        return render(request, "ccalendar/templates/index.html", {'static':BASE_DIR})
 
 def events(request, month, year):
         month = int(month)
